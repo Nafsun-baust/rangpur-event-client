@@ -53,10 +53,10 @@ export function Navbar() {
                         Login
                     </Link>
                     <Link
-                        href="/register"
+                        href="/signup"
                         className="text-sm text-foreground transition-colors hover:text-[#00A8E8]"
                     >
-                        Register
+                        Sign Up
                     </Link>
                 </div>
             </nav>
