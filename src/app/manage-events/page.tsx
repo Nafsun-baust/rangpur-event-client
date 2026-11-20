@@ -29,16 +29,15 @@ const ManageEventsPage = async () => {
                 {events.map((item) => (
                     <Card
                         key={item._id}
-                        className="overflow-hidden shadow-xs hover:shadow-md transition-shadow"
+                        className="overflow-hidden p-0 shadow-xs hover:shadow-md transition-shadow"
                     >
                         <div className="flex flex-col md:flex-row">
-                            <div className="w-full md:w-72 h-48 shrink-0 relative">
+                            <div className="w-full md:w-72 h-52 shrink-0 relative">
                                 <Image
-                                    height={400}
-                                    width={400}
+                                    fill
                                     src={item.thumbnailUrl}
                                     alt={item.title}
-                                    className="w-full h-full object-cover"
+                                    className="object-cover"
                                 />
                             </div>
 

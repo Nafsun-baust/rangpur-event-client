@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Leaf, Moon, Sun } from "lucide-react";
 import { cn } from "cn";
 import { authClient } from "@/lib/auth-client";
@@ -14,20 +14,37 @@ import {
     PopoverTitle,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
-const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/upcoming-events", label: "Upcoming Events" },
-    { href: "/create-event", label: "Create Event" },
-    { href: "/joined-events", label: "Joined Events" },
-];
 
 export function Navbar() {
     const pathname = usePathname();
-    const { data: session } = authClient.useSession();
+    const router = useRouter();
+    const { data: session, isPending } = authClient.useSession();
     const user = session?.user;
     const [dark, setDark] = useState(false);
+
+    const navLinks = [
+        { href: "/", label: "Home" },
+        { href: "/upcoming-events", label: "Upcoming Events" },
+        ...(user
+            ? [
+                { href: "/create-event", label: "Create Event" },
+                { href: "/manage-events", label: "Manage Events" },
+                { href: "/joined-events", label: "Joined Events" },
+            ]
+            : []),
+    ];
 
     useEffect(() => {
         const saved = localStorage.getItem("theme");
@@ -49,8 +66,9 @@ export function Navbar() {
         }
     };
 
-    const handleSignout = () => {
-        authClient.signOut();
+    const handleSignout = async () => {
+        await authClient.signOut();
+        router.push("/login");
     };
 
     return (
@@ -100,7 +118,12 @@ export function Navbar() {
                         )}
                     </button>
 
-                    {user ? (
+                    {isPending ? (
+                        <div className="flex items-center gap-3">
+                            <div className="size-9 animate-pulse rounded-full bg-muted" />
+                            <div className="h-8 w-16 animate-pulse rounded-md bg-muted" />
+                        </div>
+                    ) : user ? (
                         <div className="flex items-center gap-3">
                             <Popover>
                                 <PopoverTrigger
@@ -152,13 +175,29 @@ export function Navbar() {
                                 </PopoverContent>
                             </Popover>
 
-                            <Button
-                                onClick={handleSignout}
-                                variant="destructive"
-                                size="sm"
-                            >
-                                Logout
-                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger
+                                    render={
+                                        <Button variant="destructive" size="sm">
+                                            Logout
+                                        </Button>
+                                    }
+                                />
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Are you sure you want to log out of your RangpurEvent account?
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={handleSignout}>
+                                            Logout
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </div>
                     ) : (
                         <div className="flex items-center gap-3">

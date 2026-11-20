@@ -64,9 +64,10 @@ export default function SignUpPage() {
         });
 
         if (data) {
-            setSuccessMsg("Account created successfully!");
+            await authClient.signOut();
+            setSuccessMsg("Account created successfully! Please login.");
             setTimeout(() => {
-                router.push("/");
+                router.push("/login");
             }, 800);
         }
 
