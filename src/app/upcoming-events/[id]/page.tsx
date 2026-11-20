@@ -10,11 +10,10 @@ import {
   MapPin,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import type { IEvent } from "@/lib/types/events";
 import EditEventDialog from "@/components/event/EditEventDialog";
 import DeleteEventDialog from "@/components/event/DeleteEventDialog";
+import JoinEventCard from "@/components/event/JoinEventCard";
 
 const guidelines = [
   "Arrive 15 minutes before the schedule",
@@ -109,25 +108,7 @@ const EventDetailsPage = async ({params,}: {params: Promise<{ id: string }>}) =>
             </ul>
           </div>
 
-          <aside className="h-fit rounded-xl border border-border bg-slate-50 p-5">
-            <p className="text-xs text-muted-foreground">Event Category</p>
-            <p className="mt-1 text-2xl font-semibold text-emerald-600">
-              {event.eventType}
-            </p>
-
-            <p className="mt-4 text-xs text-muted-foreground">Scheduled Date</p>
-            <Input
-              readOnly
-              aria-label="Event date"
-              value={event.eventDate}
-              className="mt-1.5 bg-white"
-            />
-
-            <Button className="mt-5 w-full bg-emerald-600 text-white hover:bg-emerald-700">
-              Join Event
-              <ArrowRight />
-            </Button>
-          </aside>
+         <JoinEventCard event={event} />
         </div>
       </div>
     </main>

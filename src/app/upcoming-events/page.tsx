@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Events } from "@/components/event/events";
 import type { IEvent } from "@/lib/types/events";
 
+
 async function UpcomingEvents() {
   const res = await fetch("http://localhost:8000/upcoming-events");
   const data: IEvent[] = await res.json();
