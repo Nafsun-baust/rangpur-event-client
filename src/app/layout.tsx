@@ -5,12 +5,12 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
+    variable: "--font-sans",
   subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+    variable: "--font-sans",
   subsets: ["latin"],
 });
 

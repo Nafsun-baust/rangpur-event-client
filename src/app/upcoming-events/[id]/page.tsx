@@ -13,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { IEvent } from "@/lib/types/events";
+import EditEventDialog from "@/components/event/EditEventDialog";
+import DeleteEventDialog from "@/components/event/DeleteEventDialog";
 
 const guidelines = [
   "Arrive 15 minutes before the schedule",
@@ -30,7 +32,7 @@ const EventDetailsPage = async ({params,}: {params: Promise<{ id: string }>}) =>
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
-      <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center justify-between gap-4">
         <Link
           href="/upcoming-events"
           className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -38,6 +40,11 @@ const EventDetailsPage = async ({params,}: {params: Promise<{ id: string }>}) =>
           <ArrowLeft className="size-4" />
           Back to Upcoming Events
         </Link>
+
+        <div className="flex items-center gap-3">
+          <EditEventDialog event={event} />
+          <DeleteEventDialog id={id} />
+        </div>
       </div>
 
       <div className="relative mt-6 h-72 w-full overflow-hidden rounded-xl md:h-80">
