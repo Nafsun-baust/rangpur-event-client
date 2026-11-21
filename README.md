@@ -2,7 +2,7 @@
 
 A community website for create, join, and manage events in Rangpur.
 
-Live Site: http://localhost:3000/
+Live Site: https://rangpur-event-frontend.vercel.app
 
 ## Features
 - Users can register and login with email/password or Google using BetterAuth.

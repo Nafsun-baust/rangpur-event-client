@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 export function Newsletter() {
   return (
     <section className="w-full bg-white px-6 py-20">
-      <div className="mx-auto max-w-5xl rounded-2xl  from-emerald-800 to-teal-700 px-6 py-14 text-center text-white shadow-sm md:px-12">
+      <div className="mx-auto max-w-5xl rounded-2xl bg-emerald-800 bg-linear-to-r from-emerald-800 to-teal-700 px-6 py-14 text-center text-white shadow-sm md:px-12">
         <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-white/15 text-emerald-200">
           <Mail className="size-6" />
         </div>
