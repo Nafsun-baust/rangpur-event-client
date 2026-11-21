@@ -44,15 +44,20 @@ export function Features() {
                 </div>
 
                 <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {features.map((feature) => {
+                    {features.map((feature, index) => {
                         const Icon = feature.icon;
                         return (
                             <div
                                 key={feature.title}
-                                className="rounded-xl border border-border bg-card p-6 shadow-xs transition-shadow hover:shadow-md"
+                                className="flex flex-col rounded-xl border border-border border-t-4 border-t-emerald-600 bg-card p-6 shadow-xs transition-shadow hover:shadow-md"
                             >
-                                <div className="flex size-12 items-center justify-center rounded-lg bg-emerald-600/10 text-emerald-600">
-                                    <Icon className="size-6" />
+                                <div className="flex items-center justify-between">
+                                    <div className="flex size-12 items-center justify-center rounded-lg bg-emerald-600/10 text-emerald-600">
+                                        <Icon className="size-6" />
+                                    </div>
+                                    <span className="text-xs font-bold text-muted-foreground/60">
+                                        0{index + 1}
+                                    </span>
                                 </div>
                                 <h3 className="mt-5 text-lg font-semibold text-foreground">
                                     {feature.title}

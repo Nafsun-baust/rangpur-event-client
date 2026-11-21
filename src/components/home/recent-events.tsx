@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUpRight, Calendar, MapPin } from "lucide-react";
 import type { IEvent } from "@/lib/types/events";
 
 async function RecentEventsList() {
-  const res = await fetch("http://localhost:8000/recent-event", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recent-event`, {
     cache: "no-store",
   });
   const events: IEvent[] = await res.json();

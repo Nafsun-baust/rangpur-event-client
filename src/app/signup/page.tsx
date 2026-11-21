@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function SignUpPage() {
     const [errorMsg, setErrorMsg] = useState("");
@@ -46,16 +46,19 @@ export default function SignUpPage() {
             password: string;
         };
 
-        if (!/[A-Z]/.test(user.password)) {
+               if (!/[A-Z]/.test(user.password)) {
             setErrorMsg("Password must contain at least one uppercase letter.");
+            toast.error("Password must contain at least one uppercase letter.");
             return;
         }
         if (!/[a-z]/.test(user.password)) {
             setErrorMsg("Password must contain at least one lowercase letter.");
+            toast.error("Password must contain at least one lowercase letter.");
             return;
         }
         if (user.password.length < 6) {
             setErrorMsg("Password must be at least 6 characters long.");
+            toast.error("Password must be at least 6 characters long.");
             return;
         }
 
@@ -66,6 +69,7 @@ export default function SignUpPage() {
         if (data) {
             await authClient.signOut();
             setSuccessMsg("Account created successfully! Please login.");
+            toast.success("Account created successfully! Please login.");
             setTimeout(() => {
                 router.push("/login");
             }, 800);
@@ -73,6 +77,7 @@ export default function SignUpPage() {
 
         if (error) {
             setErrorMsg(error.message || "Sign up failed");
+            toast.error(error.message || "Sign up failed");
         }
     };
 

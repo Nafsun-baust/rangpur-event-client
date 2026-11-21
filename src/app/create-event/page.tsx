@@ -15,6 +15,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { authClient } from "@/lib/auth-client";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import toast from "react-hot-toast";
 
 const eventTypes = ["Cleanup", "Plantation", "Donation", "Relief", "Healthcare"];
 
@@ -36,7 +37,9 @@ export default function CreateEventPage() {
     const [errorMsg, setErrorMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
 
-    const tomorrow = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+    const [tomorrow] = useState(
+        () => new Date(Date.now() + 86400000).toISOString().split("T")[0],
+    );
 
     const update = (field: keyof typeof form, value: string) =>
         setForm((current) => ({ ...current, [field]: value }));
@@ -49,12 +52,18 @@ export default function CreateEventPage() {
         const today = new Date().toISOString().split("T")[0];
         if (form.eventDate <= today) {
             setErrorMsg("Past dates are not allowed. Please select a future date.");
+            toast.error("Past dates are not allowed. Please select a future date.");
+            return;
+        }
+        if (!form.eventType) {
+            setErrorMsg("Please select an event type.");
+            toast.error("Please select an event type.");
             return;
         }
 
         const token = await getTokenFromClient();
 
-        const res = await fetch("http://localhost:8000/create-event", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/create-event`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -69,6 +78,7 @@ export default function CreateEventPage() {
         const data = await res.json();
         if (data.insertedId) {
             setSuccessMsg("Event created successfully! Redirecting...");
+            toast.success("Event created successfully!");
             setForm(initialForm);
             setTimeout(() => {
                 router.push("/upcoming-events");

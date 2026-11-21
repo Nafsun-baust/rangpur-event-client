@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { IEvent } from "@/lib/types/events";
+import toast from "react-hot-toast";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const eventTypes = ["Cleanup", "Plantation", "Donation", "Relief", "Healthcare"];
 
@@ -35,20 +37,34 @@ const EditEventDialog = ({ event }: { event: IEvent }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { _id, ...updatedData } = form;
+    const today = new Date().toISOString().split("T")[0];
+    if (form.eventDate <= today) {
+      toast.error("Event date must be in the future.");
+      return;
+    }
+    if (!form.eventType) {
+      toast.error("Please select an event type.");
+      return;
+    }
 
-    const res = await fetch(`http://localhost:8000/event/${_id}`, {
+    const { _id, ...updatedData } = form;
+    const token = await getTokenFromClient();
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/event/${_id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     const data = await res.json();
-    console.log(data);
-    setOpen(false);
-    router.refresh();
+    if (data.modifiedCount !== undefined) {
+      toast.success("Event updated successfully!");
+      setOpen(false);
+      router.refresh();
+    }
   };
 
   return (
@@ -61,7 +77,7 @@ const EditEventDialog = ({ event }: { event: IEvent }) => {
           </Button>
         }
       />
-      <DialogContent className="min-w-xl">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Edit Event</DialogTitle>
         </DialogHeader>

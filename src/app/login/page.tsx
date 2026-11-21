@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
     const [message, setMessage] = useState("");
@@ -49,6 +50,7 @@ export default function LoginPage() {
 
         if (data) {
             setMessage("Login successful!");
+            toast.success("Login successful!");
             setTimeout(() => {
                 router.push("/");
             }, 800);
@@ -56,6 +58,7 @@ export default function LoginPage() {
 
         if (error) {
             setErrorMsg(error.message || "Invalid email or password");
+            toast.error(error.message || "Invalid email or password");
         }
     };
 

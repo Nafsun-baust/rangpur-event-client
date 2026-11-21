@@ -4,7 +4,9 @@ import type { IEvent } from "@/lib/types/events";
 
 
 async function UpcomingEvents() {
-  const res = await fetch("http://localhost:8000/upcoming-events");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upcoming-events`, {
+    cache: "no-store",
+  });
   const data: IEvent[] = await res.json();
 
   return <Events events={data} />;

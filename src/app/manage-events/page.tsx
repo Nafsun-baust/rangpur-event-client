@@ -2,6 +2,7 @@ import Image from "next/image";
 import { headers } from "next/headers";
 import { Calendar, MapPin } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 import { Card } from "@/components/ui/card";
 import EditEventDialog from "@/components/event/EditEventDialog";
 import DeleteEventDialog from "@/components/event/DeleteEventDialog";
@@ -10,11 +11,15 @@ import type { IEvent } from "@/lib/types/events";
 const ManageEventsPage = async () => {
     const session = await auth.api.getSession({ headers: await headers() });
     const user = session?.user;
+    const token = await getTokenFromServer();
 
-    const res = await fetch(`http://localhost:8000/manage-events/${user?.email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manage-events/${user?.email}`, {
         cache: "no-store",
+        headers: {
+            authorization: `Bearer ${token}`,
+        },
     });
-    const events: IEvent[] = await res.json();
+    const events: IEvent[] = res.ok ? await res.json() : [];
 
     return (
         <div className="container mx-auto max-w-5xl py-10 px-4 md:px-6 min-h-screen">

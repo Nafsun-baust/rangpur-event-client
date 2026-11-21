@@ -3,18 +3,24 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { Calendar, Eye, MapPin } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import LeaveEventDialog from "@/components/event/LeaveEventDialog";
 import type { IEvent } from "@/lib/types/events";
 
 const JoinedEventsPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
+  const token = await getTokenFromServer();
 
-  const res = await fetch(`http://localhost:8000/joined-events/${user?.email}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/joined-events/${user?.email}`, {
     cache: "no-store",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
-  const events: (IEvent & { eventId?: string })[] = await res.json();
+  const events: (IEvent & { eventId?: string })[] = res.ok ? await res.json() : [];
 
   return (
     <div className="container mx-auto max-w-5xl py-10 px-4 md:px-6 min-h-screen">
@@ -64,6 +70,7 @@ const JoinedEventsPage = async () => {
                 </div>
 
                 <div className="flex justify-end gap-3 mt-6">
+                  <LeaveEventDialog id={item._id} />
                   <Link href={`/upcoming-events/${item.eventId || item._id}`}>
                     <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
                       <Eye className="size-4" />

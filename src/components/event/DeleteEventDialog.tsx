@@ -1,5 +1,4 @@
 "use client";
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -13,16 +12,24 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const DeleteEventDialog = ({ id }: { id: string }) => {
+    const router = useRouter();
+
     const handleDeleteEvent = async () => {
-        const res = await fetch(`http://localhost:8000/event/${id}`, {
+        const token = await getTokenFromClient();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/event/${id}`, {
             method: "DELETE",
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
         });
         await res.json();
-
-        redirect("/upcoming-events");
+        toast.success("Event deleted successfully!");
+        router.refresh();
     };
 
     return (

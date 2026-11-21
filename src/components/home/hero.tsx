@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export function Hero() {
@@ -23,19 +24,19 @@ export function Hero() {
           Create, join, and explore social events happening in Rangpur. Connect with us and be part of this community.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a
+          <Link
             href="/upcoming-events"
-            className="flex items-center gap-3 bg-[#00A8E8] px-7 py-3.5 text-sm font-semibold tracking-widest text-white uppercase transition-colors hover:bg-[#0095d1]"
+            className="flex items-center gap-3 bg-emerald-600 px-7 py-3.5 text-sm font-semibold tracking-widest text-white uppercase transition-colors hover:bg-emerald-700"
           >
             Explore Events
             <ArrowRight className="size-4" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/create-event"
             className="bg-white/30 px-7 py-3.5 text-sm font-semibold tracking-widest text-white uppercase backdrop-blur-sm transition-colors hover:bg-white/40"
           >
             Create Event
-          </a>
+          </Link>
         </div>
       </div>
     </section>

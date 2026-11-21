@@ -1,12 +1,13 @@
 "use client";
-
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { IEvent } from "@/lib/types/events";
 import { authClient } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const JoinEventCard = ({ event }: { event: IEvent }) => {
   const { data: session } = authClient.useSession();
@@ -16,11 +17,13 @@ const JoinEventCard = ({ event }: { event: IEvent }) => {
 
   const handleJoinEvent = async () => {
     if (!user) {
+      toast.error("Please login to join this event.");
       router.push("/login");
       return;
     }
 
     const { _id, ...eventData } = event;
+    const token = await getTokenFromClient();
 
     const data = {
       eventId: _id,
@@ -31,10 +34,11 @@ const JoinEventCard = ({ event }: { event: IEvent }) => {
       joinedDate: new Date(),
     };
 
-    const res = await fetch("http://localhost:8000/join-event", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/join-event`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
@@ -42,6 +46,10 @@ const JoinEventCard = ({ event }: { event: IEvent }) => {
     const result = await res.json();
     if (result.insertedId) {
       setJoined(true);
+      toast.success("Successfully joined the event!");
+    } else if (result.alreadyJoined) {
+      setJoined(true);
+      toast("You have already joined this event.");
     }
   };
 
